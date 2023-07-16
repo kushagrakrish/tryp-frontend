@@ -3,16 +3,27 @@
 import cx from "classnames";
 import { useState } from "react";
 
-interface tableData {
+interface TableData {
   rowResult: Array<any>;
   colResult: Array<any>;
   variant?: "primary" | "secondary";
-  caption?: String;
+  caption?: string;
+  sorting?: boolean;
+  pagination?: boolean; // Add pagination property
 }
 
-const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
+const Table = ({
+  rowResult,
+  colResult,
+  variant,
+  caption,
+  sorting,
+  pagination,
+}: TableData) => {
   const [sortColumn, setSortColumn] = useState<number>(-1);
   const [sortAscending, setSortAscending] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(5);
 
   const handleSort = (columnId: number, sortable: boolean) => {
     if (sortable) {
@@ -28,14 +39,23 @@ const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
   const sortedRowResult = [...rowResult].sort((a, b) => {
     if (sortColumn !== -1 && colResult[sortColumn].sortable) {
       const sortFn = colResult[sortColumn].cell;
-      if (sortAscending) {
-        return sortFn(a).props.children.localeCompare(sortFn(b).props.children);
-      } else {
-        return sortFn(b).props.children.localeCompare(sortFn(a).props.children);
+      const valueA = sortFn(a)?.props?.children;
+      const valueB = sortFn(b)?.props?.children;
+
+      if (typeof valueA === "string" && typeof valueB === "string") {
+        if (sortAscending) {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
       }
     }
     return 0;
   });
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const slicedRowResult = sortedRowResult.slice(startIndex, endIndex);
 
   return (
     <div className='px-5 mt-10'>
@@ -54,9 +74,9 @@ const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
             )}
           >
             <tr>
-              {colResult?.map((data, id) => (
+              {colResult?.map((data, colIndex) => (
                 <th
-                  key={id}
+                  key={colIndex}
                   className={cx(
                     {
                       "bg-[#ffffff] ": variant === "primary",
@@ -65,11 +85,15 @@ const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
                     "px-5 py-3",
                     {
                       "cursor-pointer": data.sortable,
-                      "text-[underline]": sortColumn === id && data.sortable,
+                      "text-[underline]":
+                        sortColumn === colIndex &&
+                        data.sortable &&
+                        typeof colResult[colIndex].cell(rowResult[0])?.props
+                          ?.children === "string",
                     }
                   )}
                   scope='col'
-                  onClick={() => handleSort(id, data.sortable)}
+                  onClick={() => handleSort(colIndex, data.sortable)}
                 >
                   {data.header}
                 </th>
@@ -77,33 +101,52 @@ const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
             </tr>
           </thead>
           <tbody>
-            {sortedRowResult?.map((row, id) => (
-              <tr
-                key={id}
-                className={cx({
-                  "bg-[#FFFFFF] odd:bg-[#ebebeb]": variant === "primary",
-                  "bg-[#131718] odd:bg-[#131718] border-b-[3px] border-[#212829] ":
-                    variant === "secondary",
-                })}
-              >
-                {colResult?.map((col, id) => (
-                  <td
+            {pagination
+              ? slicedRowResult?.map((row, id) => (
+                  <tr
                     key={id}
-                    className='px-5 py-4 text-[16px] leading-[22px] font-normal font-inter text-[#000000]'
+                    className={cx({
+                      "bg-[#FFFFFF] odd:bg-[#ebebeb]": variant === "primary",
+                      "bg-[#131718] odd:bg-[#131718] border-b-[3px] border-[#212829] ":
+                        variant === "secondary",
+                    })}
                   >
-                    {col.cell(row)}
-                  </td>
+                    {colResult?.map((col, id) => (
+                      <td
+                        key={id}
+                        className='px-5 py-4 text-[16px] leading-[22px] font-normal font-inter text-[#000000]'
+                      >
+                        {col.cell(row)}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              : sortedRowResult?.map((row, id) => (
+                  <tr
+                    key={id}
+                    className={cx({
+                      "bg-[#FFFFFF] odd:bg-[#ebebeb]": variant === "primary",
+                      "bg-[#131718] odd:bg-[#131718] border-b-[3px] border-[#212829] ":
+                        variant === "secondary",
+                    })}
+                  >
+                    {colResult?.map((col, id) => (
+                      <td
+                        key={id}
+                        className='px-5 py-4 text-[16px] leading-[22px] font-normal font-inter text-[#000000]'
+                      >
+                        {col.cell(row)}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
           </tbody>
-
           {colResult?.map((data, id) => (
             <tfoot key={id}>
               <tr>
                 {data?.footer && (
                   <td
-                    className='bg-[#232A2C] px-5  py-3'
+                    className='bg-[#232A2C] px-5 py-3'
                     colSpan={colResult.length}
                   >
                     {data.footer}
@@ -112,6 +155,30 @@ const Table = ({ rowResult, colResult, variant, caption }: tableData) => {
               </tr>
             </tfoot>
           ))}
+          {pagination && (
+            <tfoot>
+              <tr>
+                <td colSpan={colResult.length}>
+                  <div className='flex justify-end py-5 px-5'>
+                    <button
+                      className={`px-3 py-1 rounded-md bg-[#D94407] text-white  disabled:cursor-not-allowed disabled:text-white `}
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage(currentPage - 1)}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      className='px-3 py-1 rounded-md bg-[#D94407] text-white ml-2 disabled:cursor-not-allowed'
+                      disabled={endIndex >= sortedRowResult.length}
+                      onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
     </div>

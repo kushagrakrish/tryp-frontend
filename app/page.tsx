@@ -14,6 +14,8 @@ export default function Home() {
         variant='primary'
         colResult={CompanyDashboardcolResult}
         rowResult={CompanyDashboardrowResult}
+        sorting={true}
+        pagination={true}
       />
       {/* </div> */}
     </>

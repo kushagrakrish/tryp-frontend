@@ -25,6 +25,7 @@ var CompanyDashboardcolResult: IColumn[] = [
         {data.purchaseId}
       </div>
     ),
+    sortable: true, // Added sortable property
   },
   {
     id: 3,
@@ -34,16 +35,28 @@ var CompanyDashboardcolResult: IColumn[] = [
         {data.mailId}
       </div>
     ),
+    sortable: true, // Added sortable property
   },
   {
     id: 4,
     header: "Name",
     cell: (data: any) => <div className={cx("")}>{data.name}</div>,
+    sortable: true, // Added sortable property
   },
 
-  { id: 5, header: "Source", cell: (data: any) => <div>{data.source}</div> },
+  {
+    id: 5,
+    header: "Source",
+    cell: (data: any) => <div>{data.source}</div>,
+    sortable: true, // Added sortable property
+  },
 
-  { id: 6, header: "Status", cell: (data: any) => <div>{data.status}</div> },
+  {
+    id: 6,
+    header: "Status",
+    cell: (data: any) => <div>{data.status}</div>,
+    sortable: true, // Added sortable property
+  },
   {
     id: 7,
     header: "Select",
@@ -52,6 +65,7 @@ var CompanyDashboardcolResult: IColumn[] = [
         {data.select}
       </div>
     ),
+    sortable: true, // Added sortable property
   },
 ];
 
@@ -76,7 +90,7 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     source: "USA",
     status: (
       <AppPill status='failed' size='sm'>
-        E-Signed
+        Z-Signed
       </AppPill>
     ),
     select: "Select",
