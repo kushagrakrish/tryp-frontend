@@ -1,18 +1,11 @@
 "use client";
 
+import { TableData } from "@/constants/data";
 import cx from "classnames";
 import { useState } from "react";
 
-interface TableData {
-  rowResult: Array<any>;
-  colResult: Array<any>;
-  variant?: "primary" | "secondary";
-  caption?: string;
-  sorting?: boolean;
-  pagination?: boolean; // Add pagination property
-}
-
-const Table = ({
+const CustomTable = ({
+  headers,
   rowResult,
   colResult,
   variant,
@@ -74,7 +67,7 @@ const Table = ({
             )}
           >
             <tr>
-              {colResult?.map((data, colIndex) => (
+              {headers.map((header, colIndex) => (
                 <th
                   key={colIndex}
                   className={cx(
@@ -84,18 +77,20 @@ const Table = ({
                     },
                     "px-5 py-3",
                     {
-                      "cursor-pointer": data.sortable,
+                      "cursor-pointer": colResult[colIndex]?.sortable,
                       "text-[underline]":
                         sortColumn === colIndex &&
-                        data.sortable &&
-                        typeof colResult[colIndex].cell(rowResult[0])?.props
+                        colResult[colIndex]?.sortable &&
+                        typeof colResult[colIndex]?.cell(rowResult[0])?.props
                           ?.children === "string",
                     }
                   )}
                   scope='col'
-                  onClick={() => handleSort(colIndex, data.sortable)}
+                  onClick={() =>
+                    handleSort(colIndex, colResult[colIndex]?.sortable)
+                  }
                 >
-                  {data.header}
+                  {header}
                 </th>
               ))}
             </tr>
@@ -185,4 +180,4 @@ const Table = ({
   );
 };
 
-export default Table;
+export default CustomTable;

@@ -3,13 +3,15 @@ import {
   CompanyDashboardcolResult,
   CompanyDashboardrowResult,
 } from "@/components/TableItems";
+import { headers } from "@/constants/data";
 
 export default function Home() {
   return (
     <>
       <h1>This is going to be the table data</h1>
-      {/* <div className='w-full'> */}
+
       <CustomTable
+        headers={headers}
         caption='Bookings'
         variant='primary'
         colResult={CompanyDashboardcolResult}
@@ -17,7 +19,6 @@ export default function Home() {
         sorting={true}
         pagination={true}
       />
-      {/* </div> */}
     </>
   );
 }
