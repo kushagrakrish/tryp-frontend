@@ -5,12 +5,9 @@ import cx from "classnames";
 import { ReactNode } from "react";
 import AppPill from "./AppPill";
 
+// Currently data is hardcoded but in case of api data can be easily set
+
 var CompanyDashboardcolResult: IColumn[] = [
-  {
-    id: 0,
-    header: " ",
-    cell: (data: any) => <div className={cx("pl-4")}>{data.id}</div>,
-  },
   {
     id: 1,
     header: "TIMESTAMP",
@@ -70,7 +67,6 @@ var CompanyDashboardcolResult: IColumn[] = [
 ];
 
 interface CompanyDashboardrowData {
-  id: number;
   timestamp: string;
   purchaseId: number;
   mailId: string;
@@ -82,7 +78,6 @@ interface CompanyDashboardrowData {
 
 var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
   {
-    id: 0,
     timestamp: "35 minutes ago",
     purchaseId: 28759828,
     mailId: "dean1@gmail.com",
@@ -90,13 +85,12 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     source: "USA",
     status: (
       <AppPill status='failed' size='sm'>
-        Z-Signed
+        E-Signed
       </AppPill>
     ),
     select: "Select",
   },
   {
-    id: 1,
     timestamp: "1 hour ago",
     purchaseId: 38759829,
     mailId: "sam2@gmail.com",
@@ -104,13 +98,12 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     source: "USA",
     status: (
       <AppPill status='waiting' size='sm'>
-        E-Signed
+        Manual
       </AppPill>
     ),
     select: "Select",
   },
   {
-    id: 2,
     timestamp: "2 hours ago",
     purchaseId: 48759830,
     mailId: "castiel3@gmail.com",
@@ -124,7 +117,6 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     select: "Select",
   },
   {
-    id: 3,
     timestamp: "3 hours ago",
     purchaseId: 58759831,
     mailId: "rowena4@gmail.com",
@@ -138,7 +130,6 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     select: "Select",
   },
   {
-    id: 7,
     timestamp: "7 hours ago",
     purchaseId: 98759835,
     mailId: "charlie8@gmail.com",
@@ -152,7 +143,6 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     select: "Select",
   },
   {
-    id: 4,
     timestamp: "4 hours ago",
     purchaseId: 68759832,
     mailId: "lucifer5@gmail.com",
@@ -166,7 +156,6 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     select: "Select",
   },
   {
-    id: 5,
     timestamp: "5 hours ago",
     purchaseId: 78759833,
     mailId: "bobby6@gmail.com",
@@ -180,7 +169,6 @@ var CompanyDashboardrowResult: CompanyDashboardrowData[] = [
     select: "Select",
   },
   {
-    id: 6,
     timestamp: "6 hours ago",
     purchaseId: 88759834,
     mailId: "crowley7@gmail.com",

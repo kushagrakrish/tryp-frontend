@@ -1,5 +1,4 @@
 export const headers = [
-  "Id",
   "Timestamp",
   "Purchase ID",
   "Mail",

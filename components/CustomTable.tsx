@@ -3,6 +3,7 @@
 import { TableData } from "@/constants/data";
 import cx from "classnames";
 import { useState } from "react";
+import { FaSort } from "react-icons/fa";
 
 const CustomTable = ({
   headers,
@@ -53,8 +54,8 @@ const CustomTable = ({
   return (
     <div className='px-5 mt-10'>
       <div className='overflow-x-auto shadow-2xl sm:rounded-lg'>
-        <table className='text-left bg-white rounded-full w-full'>
-          <caption className='font-bold text-xl text-gray-700 py-2'>
+        <table className='text-left bg-white  w-full'>
+          <caption className='font-bold text-xl text-gray-900 py-4 bg-gray-200'>
             {caption}
           </caption>
           <thead
@@ -75,10 +76,10 @@ const CustomTable = ({
                       "bg-[#ffffff] ": variant === "primary",
                       "bg-[#b9b9b9]": variant === "secondary",
                     },
-                    "px-5 py-3",
+                    "px-5 py-3 ",
                     {
-                      "cursor-pointer": colResult[colIndex]?.sortable,
-                      "text-[underline]":
+                      "cursor-pointer ": colResult[colIndex]?.sortable,
+                      "text-[underline] ":
                         sortColumn === colIndex &&
                         colResult[colIndex]?.sortable &&
                         typeof colResult[colIndex]?.cell(rowResult[0])?.props
@@ -90,7 +91,10 @@ const CustomTable = ({
                     handleSort(colIndex, colResult[colIndex]?.sortable)
                   }
                 >
-                  {header}
+                  <div className='flex items-center gap-5'>
+                    {header}
+                    <FaSort />
+                  </div>
                 </th>
               ))}
             </tr>
